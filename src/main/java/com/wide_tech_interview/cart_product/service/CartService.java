@@ -7,6 +7,6 @@ import com.wide_tech_interview.cart_product.model.Product;
 
 public interface CartService {
 
-    Cart addProductToCart(Cart cart, String name, int price, Long productTypeId, int quantity);
+    Product addProductToCart(Cart cart, String name, int price, Long productTypeId, int quantity);
     public Page<Product> getProductsInCart(Long cartId, int page, int size);
 }

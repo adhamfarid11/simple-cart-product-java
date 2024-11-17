@@ -1,5 +1,6 @@
 package com.wide_tech_interview.cart_product.controller;
 
+import com.wide_tech_interview.cart_product.dto.ApiResponse;
 import com.wide_tech_interview.cart_product.dto.ProductRequestDTO;
 import com.wide_tech_interview.cart_product.model.Cart;
 import com.wide_tech_interview.cart_product.model.Product;
@@ -7,6 +8,7 @@ import com.wide_tech_interview.cart_product.service.CartService;
 import com.wide_tech_interview.cart_product.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,27 +37,31 @@ public class CartProductController {
 
     // Get paginated products in a specific cart
     @GetMapping("/{cartId}/products")
-    public ResponseEntity<Page<Product>> getPaginatedProductsInCart(
+    public ResponseEntity<ApiResponse<Page<Product>>> getPaginatedProductsInCart(
             @PathVariable Long cartId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         Page<Product> paginatedProducts = cartService.getProductsInCart(cartId, page, size);
-        return ResponseEntity.ok(paginatedProducts);
+        String message = "Successfully retrieved the cart.";
+        ApiResponse<Page<Product>> response = new ApiResponse<>(message, paginatedProducts);
+        return ResponseEntity.ok(response);
     }
 
     // Endpoint to add a product to the cart
     @PostMapping("/products")
-    public ResponseEntity<Cart> addProductToCart(@RequestBody ProductRequestDTO productRequest) {
+    public ResponseEntity<ApiResponse<Product>> addProductToCart(@RequestBody ProductRequestDTO productRequest) {
+        String name = productRequest.getName();
+        int price = productRequest.getPrice();
+        Long productTypeId = productRequest.getProductTypeId();
+        int quantity = productRequest.getQuantity();
 
-    String name = productRequest.getName();
-    int price = productRequest.getPrice();
-    Long productTypeId = productRequest.getProductTypeId();
-    int quantity = productRequest.getQuantity();
+        Cart cart = getCart(); 
+        Product savedProduct = cartService.addProductToCart(cart, name, price, productTypeId, quantity);
 
-    Cart cart = getCart(); 
-    Cart updatedCart = cartService.addProductToCart(cart, name, price, productTypeId, quantity);
-    return ResponseEntity.ok(updatedCart);
-}
+        String message = "Successfully added product: " + name + " to the cart.";
+        ApiResponse<Product> response = new ApiResponse<>(message, savedProduct);
 
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }

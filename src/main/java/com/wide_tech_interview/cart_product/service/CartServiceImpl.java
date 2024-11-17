@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart addProductToCart(Cart cart, String name, int price, Long productTypeId, int quantity) {
+    public Product addProductToCart(Cart cart, String name, int price, Long productTypeId, int quantity) {
         Product newProduct = new Product();
         newProduct.setName(name);
         newProduct.setPrice(price);
@@ -49,7 +49,8 @@ public class CartServiceImpl implements CartService {
         Product savedProduct = productRepository.save(newProduct);
     
         cart.getProducts().add(savedProduct); 
+        cartRepository.save(cart);
     
-        return cartRepository.save(cart);
+        return savedProduct;
     }
 }
