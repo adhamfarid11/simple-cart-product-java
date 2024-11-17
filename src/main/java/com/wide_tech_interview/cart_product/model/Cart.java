@@ -1,26 +1,20 @@
 package com.wide_tech_interview.cart_product.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
-public class Product {
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private int price;
-    private int quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    @JsonIgnore
-    private Cart cart;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
 }
