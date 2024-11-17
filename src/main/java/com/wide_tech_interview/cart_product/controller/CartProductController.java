@@ -48,18 +48,26 @@ public class CartProductController {
         return ResponseEntity.ok(carts);
     }
 
-    // Get paginated products in a specific cart
     @GetMapping("/{cartId}/products")
-    public ResponseEntity<ApiResponse<Page<Product>>> getPaginatedProductsInCart(
+    public ResponseEntity<ApiResponse<Page<ProductResponseDTO>>> getPaginatedProductsInCart(
             @PathVariable Long cartId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+    
         Page<Product> paginatedProducts = cartService.getProductsInCart(cartId, page, size);
-        String message = "Successfully retrieved the cart.";
-        ApiResponse<Page<Product>> response = new ApiResponse<>(message, paginatedProducts);
+    
+        Page<ProductResponseDTO> productResponseDTOPage = paginatedProducts.map(product -> {
+            ProductType productType = productTypeRepository.findById(product.getProductTypeId())
+                    .orElseThrow(() -> new RuntimeException("Product type not found for ID: " + product.getProductTypeId()));
+            return productMapper.mapToResponse(product, productType);
+        });
+    
+        String message = "Successfully retrieved the cart products.";
+        ApiResponse<Page<ProductResponseDTO>> response = new ApiResponse<>(message, productResponseDTOPage);
+    
         return ResponseEntity.ok(response);
     }
+    
 
     // Endpoint to add a product to the cart
     @PostMapping("/products")

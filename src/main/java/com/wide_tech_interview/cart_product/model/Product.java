@@ -24,4 +24,13 @@ public class Product {
     @JoinColumn(name = "cart_id")
     @JsonIgnore
     private Cart cart;
+
+    @Column(nullable = false)
+    private int total;
+
+    @PrePersist
+    @PreUpdate
+    public void updateTotal() {
+        this.total = this.quantity * this.price;
+    }
 }
