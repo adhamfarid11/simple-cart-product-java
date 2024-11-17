@@ -18,6 +18,7 @@ public class Product {
     private String name;
     private int price;
     private int quantity;
+    private Long productTypeId;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")

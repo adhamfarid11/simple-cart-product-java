@@ -45,6 +45,7 @@ public class CartServiceImpl implements CartService {
         newProduct.setPrice(price);
         newProduct.setQuantity(quantity);
         newProduct.setCart(cart);
+        newProduct.setProductTypeId(productTypeId);
     
         Product savedProduct = productRepository.save(newProduct);
     
