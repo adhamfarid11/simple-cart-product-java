@@ -21,9 +21,14 @@ public class Product {
     private Long productTypeId;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", nullable = true)
     @JsonIgnore
     private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "processed_cart_id", nullable = true)
+    @JsonIgnore
+    private ProcessedCart processedCart;
 
     @Column(nullable = false)
     private int total;

@@ -8,6 +8,7 @@ import com.wide_tech_interview.cart_product.model.Cart;
 import com.wide_tech_interview.cart_product.model.Product;
 import com.wide_tech_interview.cart_product.model.ProductType;
 import com.wide_tech_interview.cart_product.service.CartService;
+import com.wide_tech_interview.cart_product.service.ProductService;
 import com.wide_tech_interview.cart_product.repository.CartRepository;
 import com.wide_tech_interview.cart_product.repository.ProductTypeRepository;
 
@@ -27,6 +28,9 @@ public class CartProductController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private CartRepository cartRepository;
@@ -66,6 +70,21 @@ public class CartProductController {
         ApiResponse<Page<ProductResponseDTO>> response = new ApiResponse<>(message, productResponseDTOPage);
     
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{cartId}/process-products")
+    public ResponseEntity<ApiResponse<Page<ProductResponseDTO>>> postProductToProcessedCart(
+        @PathVariable Long cartId,
+        @RequestBody List<Long> productIds){
+        
+            if (productIds == null || productIds.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>("Product IDs list cannot be null or empty.", null));
+        }
+
+        productService.moveProductsToProcessedCart(cartId, productIds);
+
+        String message = "Successfully moved products to the Processed Product Cart.";
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(message, null));
     }
     
 
