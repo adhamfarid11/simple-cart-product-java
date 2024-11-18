@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import com.wide_tech_interview.cart_product.dto.ApiResponse;
 import com.wide_tech_interview.cart_product.dto.ProductResponseDTO;
 import com.wide_tech_interview.cart_product.mapper.ProductMapper;
-import com.wide_tech_interview.cart_product.model.Cart;
 import com.wide_tech_interview.cart_product.model.ProcessedCart;
 import com.wide_tech_interview.cart_product.model.Product;
 import com.wide_tech_interview.cart_product.model.ProductType;
-import com.wide_tech_interview.cart_product.repository.CartRepository;
 import com.wide_tech_interview.cart_product.repository.ProcessedCartRepository;
 import com.wide_tech_interview.cart_product.repository.ProductTypeRepository;
-import com.wide_tech_interview.cart_product.service.CartService;
 import com.wide_tech_interview.cart_product.service.ProcessedCartService;
 
 @RestController
